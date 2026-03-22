@@ -6,10 +6,7 @@ import com.swag.Ecomk.Ecomk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +26,17 @@ public class UserController {
     public ResponseEntity<List<UserResponce>>getuser(){
     return  ResponseEntity.ok(userService.getUser());
 }
-//@PostMapping("api/updateuser")
+@PutMapping("/api/updateuser/{id}")
+    public ResponseEntity<String>Updateuser(@PathVariable Long id,@RequestBody UserRequest updateuserRequest){
+    userService.UpdateUser(id,updateuserRequest);
+    return  ResponseEntity.ok("User updated Successfully...");
+
+}
+    @GetMapping("/api/user/{id}")
+    public ResponseEntity<UserResponce> getUser(@PathVariable Long id) {
+        return userService.getParticularUser(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 }

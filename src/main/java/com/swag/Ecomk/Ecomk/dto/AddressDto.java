@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class AddressDto {
-    private  Long id;
     private  String stret;
     private  String city;
     private  String state;
