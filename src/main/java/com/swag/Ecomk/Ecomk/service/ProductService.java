@@ -42,11 +42,11 @@ public class ProductService {
         product.setActive(productRequest.getActive());
         product.setPrice(productRequest.getPrice());
         product.setImageUrl(productRequest.getImageUrl());
-        product.setStockQuality(product.getStockQuality());
+        product.setStockQuality(productRequest.getStockQuality());
     }
 
     public List<ProductResponce> getAllProducts() {
-        return respository.findByActive().stream().map(this::mapToResponce).collect(Collectors.toList());
+        return respository.findByActiveTrue().stream().map(this::mapToResponce).collect(Collectors.toList());
 
     }
 
@@ -57,5 +57,16 @@ public class ProductService {
             Product updatedProduct=respository.save(exitingProduct);
             return mapToResponce(updatedProduct);
         });
+    }
+
+    public boolean deleteProduct(Long id) {
+        return respository.findById(id).map(product -> {product.setActive(false);
+        respository.save(product);
+        return true;}).orElse(false);
+        
+    }
+
+    public List<ProductResponce> searchPoduct(String keyword) {
+        return respository.searchProducts(keyword).stream().map(this::mapToResponce).collect(Collectors.toList());
     }
 }

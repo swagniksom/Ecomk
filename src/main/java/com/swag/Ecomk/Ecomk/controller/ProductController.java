@@ -18,17 +18,19 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+
     @PostMapping
     public ResponseEntity<ProductResponce>createProduct(@RequestBody ProductRequest productRequest){
         return new  ResponseEntity<ProductResponce>(productService.createProduct(productRequest),HttpStatus.CREATED);
     }
 @GetMapping
     public ResponseEntity<List<ProductResponce>> getAllPrduct(){
-        return ResponseEntity.of(productService.getAllProducts());
+        return ResponseEntity.ok(productService.getAllProducts());
 }
 @PutMapping("/{id}")
     public ResponseEntity<ProductResponce>updateProduct(@PathVariable Long id,@RequestBody ProductRequest productRequest){
-        return productService.updateProduct(id,productRequest).
+        return productService.updateProduct(id,productRequest).map(product->ResponseEntity.ok(product)).orElseGet(()->ResponseEntity.notFound().build());
 }
 @DeleteMapping("delete/{id}")
     public ResponseEntity<Void>deleteProduct(@PathVariable Long id){
@@ -36,4 +38,9 @@ productService.deleteProduct(id);
 return ResponseEntity.noContent().build();
 }
 
+@GetMapping("/search")
+    public ResponseEntity<List<ProductResponce>>getsearchProduct(@RequestParam String keyword){
+        return ResponseEntity.ok(productService.searchPoduct(keyword));
+
+}
 }
