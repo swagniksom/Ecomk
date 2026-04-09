@@ -10,9 +10,11 @@ import com.swag.Ecomk.Ecomk.repository.UserRepository;
 //import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.TransactionScoped;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -87,4 +89,13 @@ if(productOpt.isPresent() && useropt.isPresent()){
 return  false;
     }
 
+    public List<CartItem> getCart(String userId) {
+        return userRepository.findById(Long.valueOf(userId)).map(cartRepository::findByUser).orElseGet(List::of);
+    }
+
+    public void clearcart(String userId) {
+        userRepository.findById(Long.valueOf(userId)).ifPresent(user -> {
+            cartRepository.deleteByUser(user);
+        });
+    }
 }
