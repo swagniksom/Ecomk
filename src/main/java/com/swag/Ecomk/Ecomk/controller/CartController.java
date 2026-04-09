@@ -3,11 +3,14 @@ package com.swag.Ecomk.Ecomk.controller;
 
 import com.swag.Ecomk.Ecomk.dto.CartRequest;
 import com.swag.Ecomk.Ecomk.dto.CartResonce;
+import com.swag.Ecomk.Ecomk.model.CartItem;
 import com.swag.Ecomk.Ecomk.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -24,7 +27,7 @@ public class CartController {
 return ResponseEntity.status(HttpStatus.CREATED).build();
 }
 
-@DeleteMapping("/deleteitem")
+@DeleteMapping("/deleteitem/{productId}")
 public  ResponseEntity<Void> removeFromCart(
     @RequestHeader("X-USER-ID")  String userID,
     @PathVariable Long productId
@@ -32,4 +35,9 @@ public  ResponseEntity<Void> removeFromCart(
 boolean  deleted=cartService.deleteItemFromCart(userID,productId);
 return deleted ?ResponseEntity.noContent().build() :ResponseEntity.notFound().build();
 }
+@GetMapping
+    public ResponseEntity<List<CartItem>> getCart(@RequestHeader("X-User-ID") String userId){
+return ResponseEntity.ok(cartService.getCart(userId));
+}
+
 }
